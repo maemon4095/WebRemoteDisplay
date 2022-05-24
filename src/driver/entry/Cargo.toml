@@ -1,5 +1,5 @@
 [package]
-name = "WebRemoteDisplay_Driver"
+name = "WebRemoteDisplay_Driver_Entry"
 version = "0.1.0"
 edition = "2021"
 
