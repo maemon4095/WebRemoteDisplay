@@ -25,5 +25,10 @@
         8080
     ],
     "postCreateCommand": "apt update -y && apt upgrade -y && apt install git -y",
-    "postStartCommand": "npm install -g npm && npm install -g pnpm"
+    "postStartCommand": "npm install -g npm && npm install -g pnpm",
+    "customizations": {
+        "vscode": {
+            "extensions": []
+        }
+    }
 }
