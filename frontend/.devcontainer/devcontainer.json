@@ -10,17 +10,13 @@
     ],
     "mounts": [
         {
-            "type": "bind",
-            "source": "${localWorkspaceFolder}/../",
-            "target": "/WebRemoteDisplay"
-        },
-        {
             "type": "volume",
             "source": "${localWorkspaceFolderBasename}_tmp",
             "target": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace/node_modules"
         }
     ],
-    "workspaceFolder": "/WebRemoteDisplay",
+    "workspaceMount": "source=${localWorkspaceFolder}/../,target=/WebRemoteDisplay,type=bind,consistency=cached",
+    "workspaceFolder": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace",
     "forwardPorts": [
         8080
     ],
