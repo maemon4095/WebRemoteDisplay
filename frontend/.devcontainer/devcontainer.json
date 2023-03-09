@@ -3,27 +3,27 @@
     "image": "node:slim",
     "runArgs": [
         "--workdir",
-        "/${localWorkspaceFolderBasename}",
+        "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace",
         "--tty",
         "--name",
-        "${localWorkspaceFolderBasename}"
+        "WebRemoteDisplay_${localWorkspaceFolderBasename}"
     ],
     "mounts": [
         {
             "type": "bind",
-            "source": "${localWorkspaceFolder}/workspace",
-            "target": "/${localWorkspaceFolderBasename}"
+            "source": "${localWorkspaceFolder}/../",
+            "target": "/WebRemoteDisplay"
         },
         {
             "type": "volume",
             "source": "${localWorkspaceFolderBasename}_tmp",
-            "target": "/${localWorkspaceFolderBasename}/node_modules"
+            "target": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace/node_modules"
         }
     ],
-    "workspaceFolder": "/${localWorkspaceFolderBasename}",
+    "workspaceFolder": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace",
     "forwardPorts": [
         8080
     ],
-    "postCreateCommand": "apt update -y && apt upgrade -y && apt install git -y && npm install -g pnpm && npm install -g degit && cd .. && npx degit solidjs/templates/ts-minimal -y --force ${localWorkspaceFolderBasename} && cd ${localWorkspaceFolderBasename} && npm install",
+    "postCreateCommand": "apt update -y && apt upgrade -y && apt install git -y",
     "postStartCommand": "npm install -g npm && npm install -g pnpm"
 }
