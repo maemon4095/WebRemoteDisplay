@@ -1,0 +1,33 @@
+{
+    "name": "${localWorkspaceFolderBasename}",
+    "image": "node:slim",
+    "runArgs": [
+        "--workdir",
+        "/${localWorkspaceFolderBasename}",
+        "--tty",
+        "--name",
+        "${localWorkspaceFolderBasename}"
+    ],
+    "mounts": [
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/workspace",
+            "target": "/${localWorkspaceFolderBasename}"
+        },
+        {
+            "type": "volume",
+            "source": "${localWorkspaceFolderBasename}_tmp",
+            "target": "/${localWorkspaceFolderBasename}/.pnpm-store"
+        },
+        {
+            "type": "volume",
+            "source": "${localWorkspaceFolderBasename}_tmp",
+            "target": "/${localWorkspaceFolderBasename}/node_modules"
+        }
+    ],
+    "workspaceFolder": "/${localWorkspaceFolderBasename}",
+    "forwardPorts": [
+        8080
+    ],
+    "postStartCommand": "npm install -g npm && npm install -g pnpm"
+}
