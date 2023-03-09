@@ -17,11 +17,6 @@
         {
             "type": "volume",
             "source": "${localWorkspaceFolderBasename}_tmp",
-            "target": "/${localWorkspaceFolderBasename}/.pnpm-store"
-        },
-        {
-            "type": "volume",
-            "source": "${localWorkspaceFolderBasename}_tmp",
             "target": "/${localWorkspaceFolderBasename}/node_modules"
         }
     ],
@@ -29,5 +24,6 @@
     "forwardPorts": [
         8080
     ],
+    "postCreateCommand": "apt update -y && apt upgrade -y && apt install git -y && npm install -g pnpm && npm install -g degit && cd .. && npx degit solidjs/templates/ts-minimal -y --force ${localWorkspaceFolderBasename} && cd ${localWorkspaceFolderBasename} && npm install",
     "postStartCommand": "npm install -g npm && npm install -g pnpm"
 }
