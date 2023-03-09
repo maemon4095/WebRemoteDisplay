@@ -20,7 +20,7 @@
             "target": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace/node_modules"
         }
     ],
-    "workspaceFolder": "/WebRemoteDisplay/${localWorkspaceFolderBasename}/workspace",
+    "workspaceFolder": "/WebRemoteDisplay",
     "forwardPorts": [
         8080
     ],
