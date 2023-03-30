@@ -1,9 +1,23 @@
 use axum::Router;
-use std::net::SocketAddr;
+use once_cell::sync::{self, OnceCell};
+use std::{net::SocketAddr, time::SystemTime};
 use tokio;
 mod pages;
+
+#[derive(Debug)]
+struct Application {
+    start_time: std::time::SystemTime,
+}
+
+static APP: OnceCell<Application> = OnceCell::new();
+
 #[tokio::main]
 async fn main() {
+    APP.set(Application {
+        start_time: SystemTime::now(),
+    })
+    .unwrap();
+
     let handle = tokio::spawn(async {
         let app = pages::configure_route(Router::new());
         let addr = SocketAddr::from(([127, 0, 0, 1], 3030));
