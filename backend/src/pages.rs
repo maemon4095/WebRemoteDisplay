@@ -2,7 +2,7 @@ use axum::{
     extract::ws::{Message, WebSocket, WebSocketUpgrade},
     response::{Html, IntoResponse},
     routing::get,
-    Router,
+    Error, Router,
 };
 use futures::{
     stream::{SplitSink, SplitStream},
@@ -26,28 +26,29 @@ static ROOT_PAGE: Lazy<String> = Lazy::new(|| {
 pub fn configure_route(router: Router) -> Router {
     router
         .route("/", get(root))
-        .route("/connection", get(connection))
+        .route("/display_socket", get(display_socket))
 }
 
 async fn root() -> Html<&'static str> {
     Html(&*ROOT_PAGE)
 }
 
-async fn connection(ws: WebSocketUpgrade) -> impl IntoResponse {
-    ws.on_upgrade(socket)
+async fn display_socket(ws: WebSocketUpgrade) -> impl IntoResponse {
+    ws.on_upgrade(display_connection)
 }
 
-async fn socket(socket: WebSocket) {
+async fn display_connection(socket: WebSocket) {
     let (sender, receiver) = socket.split();
 
-    tokio::select! {
+    let result = tokio::select! {
         v = receiving(receiver) => v,
         v = sending(sender) => v,
     };
 }
 
-async fn receiving(mut receiver: SplitStream<WebSocket>) {
-    while let Some(Ok(message)) = receiver.next().await {
+async fn receiving(mut receiver: SplitStream<WebSocket>) -> Result<(), Error> {
+    while let Some(message) = receiver.next().await {
+        let message = message?;
         match message {
             Message::Text(text) => {}
             Message::Binary(binary) => {}
@@ -55,16 +56,18 @@ async fn receiving(mut receiver: SplitStream<WebSocket>) {
             _ => continue,
         }
     }
+
+    Ok(())
 }
 
 //本当はビデオエンコーディングして送信，frontendでVideoDecoderを使ってデコードとしたかったけど, Safari on iosではexperimentalだったので 画像をそのまま送信とする．
-async fn sending(mut sender: SplitSink<WebSocket, Message>) {
+async fn sending(mut sender: SplitSink<WebSocket, Message>) -> Result<(), Error> {
     loop {
         let elapsed = APP.get().unwrap().start_time.elapsed().unwrap().as_secs() % 4;
         let mut image = File::open(format!("assets/{}.png", elapsed)).unwrap();
         let mut buffer = Vec::new();
         image.read_to_end(&mut buffer).unwrap();
-        sender.send(Message::Binary(buffer)).await.unwrap();
+        sender.send(Message::Binary(buffer)).await?;
         tokio::time::sleep(Duration::from_millis(50)).await;
     }
 }

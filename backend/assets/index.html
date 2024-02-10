@@ -35,7 +35,7 @@
     const context = canvas.getContext('2d');
     const url = new URL(location.href);
     url.protocol = "ws:";
-    url.pathname = "/connection"
+    url.pathname = "/display_socket"
     const socket = new WebSocket(url);
 
     socket.onmessage = async ({ data: message }) => {
